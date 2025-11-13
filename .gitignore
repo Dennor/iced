@@ -4,3 +4,7 @@ pkg/
 Cargo.lock
 dist/
 traces/
+.direnv
+.devenv
+.helix
+.pre-commit-config.yaml

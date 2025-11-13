@@ -1,28 +1,31 @@
-[package]
-name = "iced"
-description = "A cross-platform GUI library inspired by Elm"
-version.workspace = true
-edition.workspace = true
-authors.workspace = true
-license.workspace = true
-repository.workspace = true
-homepage.workspace = true
-categories.workspace = true
-keywords.workspace = true
-rust-version.workspace = true
-
-[lints]
-workspace = true
-
-[package.metadata.docs.rs]
-rustdoc-args = ["--cfg", "docsrs"]
-all-features = true
-
 [badges]
-maintenance = { status = "actively-developed" }
+maintenance = {status = "actively-developed"}
+
+[[bench]]
+name = "wgpu"
+harness = false
+required-features = ["canvas"]
+
+[dependencies]
+iced_core.workspace = true
+iced_futures.workspace = true
+iced_highlighter.workspace = true
+iced_highlighter.optional = true
+iced_renderer.workspace = true
+iced_widget.workspace = true
+iced_winit.features = ["program"]
+iced_winit.default-features = false
+iced_winit.workspace = true
+image.workspace = true
+image.optional = true
+thiserror.workspace = true
+
+[dev-dependencies]
+criterion = "0.5"
+iced_wgpu.workspace = true
 
 [features]
-default = ["wgpu", "tiny-skia", "fira-sans", "auto-detect-theme"]
+default = ["wgpu", "tiny-skia", "fira-sans", "auto-detect-theme", "x11", "wayland", "wayland-dlopen", "wayland-csd-adwaita"]
 # Enable the `wgpu` GPU-accelerated renderer backend
 wgpu = ["iced_renderer/wgpu", "iced_widget/wgpu"]
 # Enable the `tiny-skia` software renderer backend
@@ -65,31 +68,34 @@ advanced = ["iced_core/advanced", "iced_widget/advanced"]
 fira-sans = ["iced_renderer/fira-sans"]
 # Enables auto-detecting light/dark mode for the built-in theme
 auto-detect-theme = ["iced_core/auto-detect-theme"]
+# Enables X11 windowing support (enabled by default)
+x11 = ["iced_winit/x11"]
+# Enables Wayland windowing support (enabled by default)
+wayland = ["iced_winit/wayland"]
+# Enables dynamic loading of Wayland libraries (enabled by default)
+wayland-dlopen = ["iced_winit/wayland-dlopen"]
+# Enables Adwaita-style client-side decorations for Wayland (enabled by default)
+wayland-csd-adwaita = ["iced_winit/wayland-csd-adwaita"]
 
-[dependencies]
-iced_core.workspace = true
-iced_futures.workspace = true
-iced_renderer.workspace = true
-iced_widget.workspace = true
-iced_winit.features = ["program"]
-iced_winit.workspace = true
+[lints]
+workspace = true
 
-iced_highlighter.workspace = true
-iced_highlighter.optional = true
+[package]
+name = "iced"
+description = "A cross-platform GUI library inspired by Elm"
+authors.workspace = true
+categories.workspace = true
+edition.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+license.workspace = true
 
-thiserror.workspace = true
-
-image.workspace = true
-image.optional = true
-
-[dev-dependencies]
-criterion = "0.5"
-iced_wgpu.workspace = true
-
-[[bench]]
-name = "wgpu"
-harness = false
-required-features = ["canvas"]
+[package.metadata.docs.rs]
+rustdoc-args = ["--cfg", "docsrs"]
+all-features = true
+repository.workspace = true
+rust-version.workspace = true
+version.workspace = true
 
 [profile.release-opt]
 inherits = "release"
@@ -103,55 +109,43 @@ strip = "debuginfo"
 
 [workspace]
 members = [
-    "core",
-    "futures",
-    "graphics",
-    "highlighter",
-    "renderer",
-    "runtime",
-    "tiny_skia",
-    "wgpu",
-    "widget",
-    "winit",
-    "examples/*",
+  "core",
+  "futures",
+  "graphics",
+  "highlighter",
+  "renderer",
+  "runtime",
+  "tiny_skia",
+  "wgpu",
+  "widget",
+  "winit",
+  "examples/*"
 ]
 
-[workspace.package]
-version = "0.13.5"
-authors = ["Héctor Ramón Jiménez <hector@hecrj.dev>"]
-edition = "2021"
-license = "MIT"
-repository = "https://github.com/iced-rs/iced"
-homepage = "https://iced.rs"
-categories = ["gui"]
-keywords = ["gui", "ui", "graphics", "interface", "widgets"]
-rust-version = "1.80"
-
 [workspace.dependencies]
-iced = { version = "0.13", path = "." }
-iced_core = { version = "0.13", path = "core" }
-iced_futures = { version = "0.13", path = "futures" }
-iced_graphics = { version = "0.13", path = "graphics" }
-iced_highlighter = { version = "0.13", path = "highlighter" }
-iced_renderer = { version = "0.13", path = "renderer" }
-iced_runtime = { version = "0.13", path = "runtime" }
-iced_tiny_skia = { version = "0.13", path = "tiny_skia" }
-iced_wgpu = { version = "0.13", path = "wgpu" }
-iced_widget = { version = "0.13", path = "widget" }
-iced_winit = { version = "0.13", path = "winit" }
-
+iced = {version = "0.13", path = "."}
+iced_core = {version = "0.13", path = "core"}
+iced_futures = {version = "0.13", path = "futures"}
+iced_graphics = {version = "0.13", path = "graphics"}
+iced_highlighter = {version = "0.13", path = "highlighter"}
+iced_renderer = {version = "0.13", path = "renderer"}
+iced_runtime = {version = "0.13", path = "runtime"}
+iced_tiny_skia = {version = "0.13", path = "tiny_skia"}
+iced_wgpu = {version = "0.13", path = "wgpu"}
+iced_widget = {version = "0.13", path = "widget"}
+iced_winit = {version = "0.13", path = "winit", default-features = false}
 async-std = "1.0"
 bitflags = "2.0"
-bytemuck = { version = "1.0", features = ["derive"] }
+bytemuck = {version = "1.0", features = ["derive"]}
 bytes = "1.6"
 cosmic-text = "0.12"
 dark-light = "1.0"
 futures = "0.3"
 glam = "0.25"
-glyphon = { package = "iced_glyphon", version = "0.6" } # Temporary `glyphon` fork
+glyphon = {package = "iced_glyphon", version = "0.6"} # Temporary `glyphon` fork
 guillotiere = "0.6"
 half = "2.2"
-image = { version = "0.24", default-features = false }
+image = {version = "0.24", default-features = false}
 kamadak-exif = "0.5"
 kurbo = "0.10"
 log = "0.4"
@@ -162,7 +156,7 @@ once_cell = "1.0"
 ouroboros = "0.18"
 palette = "0.7"
 pulldown-cmark = "0.11"
-qrcode = { version = "0.13", default-features = false }
+qrcode = {version = "0.13", default-features = false}
 raw-window-handle = "0.6"
 resvg = "0.42"
 rustc-hash = "2.0"
@@ -184,14 +178,7 @@ web-time = "1.1"
 wgpu = "0.19"
 winapi = "0.3"
 window_clipboard = "0.4.1"
-winit = "0.30"
-
-[workspace.lints.rust]
-rust_2018_idioms = { level = "forbid", priority = -1 }
-missing_debug_implementations = "deny"
-missing_docs = "deny"
-unsafe_code = "deny"
-unused_results = "deny"
+winit = {version = "0.30", default-features = false}
 
 [workspace.lints.clippy]
 type-complexity = "allow"
@@ -208,5 +195,23 @@ needless_borrow = "deny"
 new_without_default = "deny"
 useless_conversion = "deny"
 
+[workspace.lints.rust]
+rust_2018_idioms = {level = "forbid", priority = -1}
+missing_debug_implementations = "deny"
+missing_docs = "deny"
+unsafe_code = "deny"
+unused_results = "deny"
+
 [workspace.lints.rustdoc]
 broken_intra_doc_links = "forbid"
+
+[workspace.package]
+version = "0.13.5"
+authors = ["Héctor Ramón Jiménez <hector@hecrj.dev>"]
+edition = "2021"
+license = "MIT"
+repository = "https://github.com/iced-rs/iced"
+homepage = "https://iced.rs"
+categories = ["gui"]
+keywords = ["gui", "ui", "graphics", "interface", "widgets"]
+rust-version = "1.80"
