@@ -22,7 +22,7 @@ all-features = true
 maintenance = { status = "actively-developed" }
 
 [features]
-default = ["wgpu", "tiny-skia", "fira-sans", "auto-detect-theme"]
+default = ["wgpu", "tiny-skia", "fira-sans", "auto-detect-theme", "wayland", "wayland-dlopen", "x11", "wayland-csd-adwaita", "wayland-client_system"]
 # Enable the `wgpu` GPU-accelerated renderer backend
 wgpu = ["iced_renderer/wgpu", "iced_widget/wgpu"]
 # Enable the `tiny-skia` software renderer backend
@@ -65,6 +65,16 @@ advanced = ["iced_core/advanced", "iced_widget/advanced"]
 fira-sans = ["iced_renderer/fira-sans"]
 # Enables auto-detecting light/dark mode for the built-in theme
 auto-detect-theme = ["iced_core/auto-detect-theme"]
+# Enables Wayland support
+wayland = ["iced_winit/wayland"]
+# Enables dynamic loading of Wayland libraries
+wayland-dlopen = ["iced_winit/wayland-dlopen"]
+# Enables X11 support
+x11 = ["iced_winit/x11"]
+# Enables using system libwayland instead of built in rust
+wayland-client_system = ["iced_winit/wayland-client_system"]
+# Enables Adwaita CSD on Wayland
+wayland-csd-adwaita = ["iced_winit/wayland-csd-adwaita"]
 
 [dependencies]
 iced_core.workspace = true
@@ -138,7 +148,7 @@ iced_runtime = { version = "0.13", path = "runtime" }
 iced_tiny_skia = { version = "0.13", path = "tiny_skia" }
 iced_wgpu = { version = "0.13", path = "wgpu" }
 iced_widget = { version = "0.13", path = "widget" }
-iced_winit = { version = "0.13", path = "winit" }
+iced_winit = { version = "0.13", path = "winit", default-features = false }
 
 async-std = "1.0"
 bitflags = "2.0"
@@ -184,7 +194,7 @@ web-time = "1.1"
 wgpu = "0.19"
 winapi = "0.3"
 window_clipboard = "0.4.1"
-winit = "0.30"
+winit = {git = "https://github.com/Dennor/winit", branch = "0.30.12-static-wayland", default-features = false, features = ["rwh_06"] }
 
 [workspace.lints.rust]
 rust_2018_idioms = { level = "forbid", priority = -1 }
